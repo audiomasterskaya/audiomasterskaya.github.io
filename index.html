@@ -4303,7 +4303,8 @@ function updatePlayhead(pos){
 }
 
 /* Обновляет значения счётчиков МАСТЕРА (подписи — в HTML, здесь только цифры).
-   Начало / Конец / Длина куска — по ВЫДЕЛЕННЫМ фрагментам (не по плейхеду).
+   Начало / Конец / Длина куска — координаты ВЫДЕЛЕННЫХ фрагментов
+   НА ЛИНЕЙКЕ МАСТЕРА (с учётом кроссфейдов и позиций соседей).
    Общая длина — всегда. */
 function updateTimelineCounters(){
     var inEl  = $('tlInVal');
@@ -4322,18 +4323,49 @@ function updateTimelineCounters(){
         lenEl.textContent = '— : — . —';
         return;
     }
+
+    // Позиции фрагментов на таймлайне (с учётом XFADE)
+    var tlPositions = computeTimelinePositions();
+
     if(idxs.length === 1){
-        var f = fragments[idxs[0]];
-        inEl.textContent  = fmtTime(f.trimStart);
-        outEl.textContent = fmtTime(f.trimEnd);
-        lenEl.textContent = fmtTime(fragDuration(f));
+        var i = idxs[0];
+        var xInfo = tlPositions[i];
+        if(!xInfo){
+            inEl.textContent  = '— : — . —';
+            outEl.textContent = '— : — . —';
+            lenEl.textContent = fmtTime(fragDuration(fragments[i]));
+            return;
+        }
+        // Начало/Конец — координаты фрагмента на линейке МАСТЕРА.
+        // fragGlobalStart — момент, когда фрагмент начинает звучать,
+        // fragGlobalEnd   — момент, когда он полностью заканчивается.
+        inEl.textContent  = fmtTime(xInfo.fragGlobalStart);
+        outEl.textContent = fmtTime(xInfo.fragGlobalEnd);
+        lenEl.textContent = fmtTime(fragDuration(fragments[i]));
         return;
     }
-    // Мультивыделение: Начало/Конец — прочерки, Длина куска — сумма
+
+    // Мультивыделение: берём общий «охват» выделенных фрагментов на линейке:
+    // Начало — минимальный fragGlobalStart среди выделенных,
+    // Конец  — максимальный fragGlobalEnd среди выделенных,
+    // Длина куска — сумма длительностей выделенных фрагментов.
+    var minStart = Infinity;
+    var maxEnd   = -Infinity;
     var sum = 0;
-    for(var k=0;k<idxs.length;k++) sum += fragDuration(fragments[idxs[k]]);
-    inEl.textContent  = '— : — . —';
-    outEl.textContent = '— : — . —';
+    for(var k=0;k<idxs.length;k++){
+        var xi = tlPositions[idxs[k]];
+        if(!xi) continue;
+        if(xi.fragGlobalStart < minStart) minStart = xi.fragGlobalStart;
+        if(xi.fragGlobalEnd   > maxEnd)   maxEnd   = xi.fragGlobalEnd;
+        sum += fragDuration(fragments[idxs[k]]);
+    }
+    if(minStart === Infinity || maxEnd === -Infinity){
+        inEl.textContent  = '— : — . —';
+        outEl.textContent = '— : — . —';
+    } else {
+        inEl.textContent  = fmtTime(minStart);
+        outEl.textContent = fmtTime(maxEnd);
+    }
     lenEl.textContent = fmtTime(sum);
 }
 function tlCancelLoop(){
