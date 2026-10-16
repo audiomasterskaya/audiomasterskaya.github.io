@@ -29,14 +29,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <meta property="og:title" content="АудиоМастерская — аудиотриммер в браузере">
 <meta property="og:description" content="Обрезка, склейка и кроссфейды аудио прямо в браузере. WAV и MP3 на выходе. Ничего не отправляется на сервер.">
 <meta property="og:url" content="https://github.io">
-<meta property="og:image" content="https://github.ioassets/preview.png">
+<meta property="og:image" content="https://github.io/assets/preview.png">
 <meta property="og:locale" content="ru_RU">
 
 <!-- ===== Twitter Card ===== -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="АудиоМастерская — аудиотриммер в браузере">
 <meta name="twitter:description" content="Обрезка, склейка и кроссфейды аудио прямо в браузере. WAV и MP3 на выходе.">
-<meta name="twitter:image" content="https://github.ioassets/preview.png">
+<meta name="twitter:image" content="https://github.io/assets/preview.png">
 
 <!-- ===== Тема браузера на мобильных ===== -->
 <meta name="theme-color" content="#00adb5">
@@ -1066,6 +1066,145 @@ button:disabled{
 #btnExport:not(:disabled):hover{
     animation:pulseGreen 1s ease-in-out infinite;
 }
+
+/* ============================================================
+   ФОРМА ОБРАТНОЙ СВЯЗИ
+   ============================================================ */
+.feedback-form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    max-width:720px;
+    margin:0 auto;
+}
+.ff-row{ display:flex; flex-direction:column; gap:6px; }
+.ff-label{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.6px;
+    text-transform:uppercase;
+    color:var(--accent);
+}
+.ff-input{
+    width:100%;
+    box-sizing:border-box;
+    background:rgba(0,0,0,0.35);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:5px;
+    padding:10px 12px;
+    font-size:13.5px;
+    font-family:inherit;
+    line-height:1.45;
+    transition:border-color .15s, box-shadow .15s, background .15s;
+    outline:none;
+}
+.ff-input::placeholder{ color:var(--muted); opacity:.8; }
+.ff-input:hover{ border-color:rgba(0,173,181,0.55); }
+.ff-input:focus{
+    border-color:var(--accentH);
+    background:rgba(0,0,0,0.5);
+    box-shadow:0 0 0 2px rgba(0,245,255,0.18),
+               0 0 12px rgba(0,245,255,0.18);
+}
+.ff-textarea{
+    resize:vertical;
+    min-height:90px;
+    max-height:260px;
+    font-family:inherit;
+}
+.ff-actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:2px;
+}
+.ff-hint{
+    font-size:11.5px;
+    color:var(--muted);
+    font-style:italic;
+    line-height:1.4;
+}
+#fbSubmit{
+    animation:none !important;
+    min-width:10.5em;
+    justify-content:center;
+}
+.status-inline.fb-sending{
+    color:var(--accentH);
+    font-style:italic;
+    opacity:1;
+}
+.status-inline.fb-ok{
+    color:#7ee08e;
+    font-weight:600;
+    opacity:1;
+}
+.status-inline.fb-err{
+    color:var(--err);
+    font-weight:600;
+    opacity:1;
+}
+@media (max-width:520px){
+    .ff-actions{ flex-direction:column; align-items:stretch; }
+    .ff-hint{ text-align:center; }
+    #fbSubmit{ width:100%; }
+}
+
+/* ============================================================
+   СВОРАЧИВАЕМАЯ ФОРМА ОБРАТНОЙ СВЯЗИ
+   ============================================================ */
+
+/* Заголовок блока — как кликабельная кнопка */
+#blockFeedback .feedback-toggle{
+    cursor:pointer;
+    user-select:none;
+    transition:color .2s;
+}
+#blockFeedback .feedback-toggle:hover{
+    color:var(--accentH);
+}
+
+/* Стрелочка-индикатор */
+.feedback-arrow{
+    display:inline-block;
+    font-size:12px;
+    color:var(--muted);
+    margin-left:8px;
+    line-height:1;
+    transition:transform .3s ease, color .2s ease;
+}
+#blockFeedback .feedback-toggle:hover .feedback-arrow{
+    color:var(--accentH);
+}
+#blockFeedback.open .feedback-arrow{
+    transform:rotate(180deg);
+    color:var(--accentH);
+}
+
+/* Контейнер формы — по умолчанию скрыт */
+.feedback-form-container{
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    margin-top:0;
+    transition:max-height .4s ease,
+               opacity .3s ease,
+               margin-top .3s ease;
+}
+
+/* Открытое состояние */
+#blockFeedback.open .feedback-form-container{
+    max-height:900px;
+    opacity:1;
+    margin-top:15px;
+}
+
+/* Ограничим ширину статуса, чтобы он не отжимал стрелочку */
+#blockFeedback .status-inline{
+    max-width:min(60vw, 520px);
+}
 </style>
 </head>
 <body>
@@ -1104,7 +1243,7 @@ button:disabled{
                 <line x1="9" y1="14" x2="15" y2="14"/>
             </svg>
         </div>
-        <div class="dropzone-title">Перетащите сюда звуковой файл</div>
+                <div class="dropzone-title">Перетащите сюда звуковой файл</div>
         <div class="dropzone-hint">или щёлкните, чтобы открыть папку с файлами</div>
     </div>
 
@@ -1292,7 +1431,7 @@ button:disabled{
         <span class="xf-lbl">🔀 МИКС</span>
     </label>
     <span class="xf-divider"></span>
-    <label class="xf-loop" title="Зациклить воспроизведение (повторять микс по кругу)">
+        <label class="xf-loop" title="Зациклить воспроизведение (повторять микс по кругу)">
         <input type="checkbox" id="tlLoop" disabled>
         <span class="xf-lbl">🔁 ЦИКЛ</span>
     </label>
@@ -1300,6 +1439,41 @@ button:disabled{
 </div>
 
 
+</div>
+
+<!-- ==================== ОБРАТНАЯ СВЯЗЬ ==================== -->
+<div class="block" id="blockFeedback">
+    <div class="block-title feedback-toggle" id="feedbackToggle" role="button" tabindex="0" aria-expanded="false" aria-controls="feedbackFormContainer">
+        <span>✉ ОБРАТНАЯ СВЯЗЬ</span>
+        <span class="title-actions">
+            <span class="status-inline" id="feedbackStatus">Есть идея или нашёл баг? Напиши!</span>
+            <span class="feedback-arrow">▼</span>
+        </span>
+    </div>
+
+    <div class="feedback-form-container" id="feedbackFormContainer">
+        <form class="feedback-form" id="feedbackForm" autocomplete="off" novalidate>
+            <div class="ff-row">
+                <label class="ff-label" for="fbName">Имя</label>
+                <input class="ff-input" type="text" id="fbName" name="name"
+                       placeholder="Как к тебе обращаться?" maxlength="60" required>
+            </div>
+
+            <div class="ff-row">
+                <label class="ff-label" for="fbMessage">Сообщение</label>
+                <textarea class="ff-input ff-textarea" id="fbMessage" name="message"
+                          placeholder="Опиши идею, баг или пожелание…"
+                          maxlength="2000" rows="4" required></textarea>
+            </div>
+
+            <div class="ff-actions">
+                <button class="btn btn-green" type="submit" id="fbSubmit">📨 Отправить</button>
+                <span class="ff-hint">
+                    Отправляется напрямую в Google Таблицу. Данные нигде больше не хранятся.
+                </span>
+            </div>
+        </form>
+    </div>
 </div>
 
 </div>
@@ -1370,9 +1544,10 @@ button:disabled{
                 <div class="help-block">
                     <div class="help-block-title">🖱 Мышь</div>
                     <table class="help-table">
-                        <tr><td>Клик по волне</td><td>Переставить плейхед ИСХОДНИКА</td></tr>
+                                                <tr><td>Клик ЛКМ по волне</td><td>Переставить плейхед ИСХОДНИКА</td></tr>
+                        <tr><td><span class="kbd">ПКМ</span> по волне</td><td>Открыть окно выбора файла</td></tr>
                         <tr><td>Перетаскивание шариков</td><td>Двигать метки ВХОД / ВЫХОД</td></tr>
-                        <tr><td>Долгое удержание + перетаскивание</td><td>Перетащить выделение в Мастер</td></tr>
+                        <tr><td>Долгое удержание ЛКМ + перетаскивание</td><td>Перетащить выделение в Мастер</td></tr>
                         <tr><td>Клик по фрагменту</td><td>Выделить фрагмент</td></tr>
                         <tr><td><span class="kbd">Ctrl</span> + клик</td><td>Добавить / убрать из выделения</td></tr>
                         <tr><td><span class="kbd">Shift</span> + клик</td><td>Выделить диапазон от якоря</td></tr>
@@ -1649,7 +1824,8 @@ function renderActivePanel(){
     $('lblEnd1').textContent = fmtTime(dur);
 
 
-    setPlayerButtonsEnabled(true);
+        setPlayerButtonsEnabled(true);
+    invalidateWaveCache();
     redraw();
     updateBtns();
     updateTimecode();
@@ -1739,9 +1915,11 @@ function addSourceFromFile(file){
                     setStatus('Открыт «' + file.name + '». Файл готов. Нажмите P или «⬇ В Мастер».');
                 }
 
-                // Делаем активным + стоп + сброс меток
+                                // Делаем активным + стоп ТОЛЬКО ИСХОДНИКА.
+                // ВАЖНО: МАСТЕР не трогаем — загрузка файла в ИСХОДНИК
+                // не должна прерывать воспроизведение МАСТЕРА
+                // и уводить его плейхед в ноль.
                 stop(false);
-                tlStop(true);
                 activeSourceId = slot.id;
 
                 renderActivePanel();
@@ -1825,19 +2003,19 @@ function initFileZone(){
         inp.value = '';
     });
 
-    // ===== Двойной клик по волне ИСХОДНИКА открывает диалог загрузки =====
-    // Открываем папку для выбора нового файла. Клик по волне также
-    // используется для установки плейхеда (одиночный клик), поэтому
-    // вешаем именно dblclick — он срабатывает после двух быстрых кликов
-    // и не конфликтует с одиночным (плейхед всё равно успеет прыгнуть
-    // дважды, но это визуально незаметно и не мешает).
+        // ===== ПРАВАЯ КНОПКА МЫШИ по волне ИСХОДНИКА открывает диалог загрузки =====
+    // ПКМ — самый чистый способ: он не конфликтует ни с кликом по волне
+    // (ЛКМ), ни с перетаскиванием выделения в МАСТЕР (ЛКМ+удержание),
+    // ни с перетаскиванием шариков меток (ЛКМ).
+    //
+    // При этом стандартное контекстное меню браузера отключаем через
+    // e.preventDefault() — канва становится «нашей».
     var cvs = $('canvas1');
     if(cvs){
-        cvs.addEventListener('dblclick', function(e){
-            // Не даём браузеру выделять текст/элементы при двойном клике.
+        // Отключаем стандартное контекстное меню на канве.
+        cvs.addEventListener('contextmenu', function(e){
             e.preventDefault();
-            // Отменяем отложенную перестановку плейхеда — это был двойной клик
-            if(singleClickTimer){ clearTimeout(singleClickTimer); singleClickTimer = null; }
+            // Открываем диалог выбора файла.
             inp.click();
         });
     }
@@ -1900,7 +2078,7 @@ function resetMarks(){
     T.pausedAt = 0;
     T.paused = false;
     T.playing = false;
-    T.stopped = false;
+        T.stopped = false;
     redraw();
     updateTimecode();
 }
@@ -1932,7 +2110,7 @@ function markPoint(target){
         }
         $('lblEnd1').textContent = fmtTime(T.markOut);
     }
-    redraw(); updateTimecode();
+        redraw(); updateTimecode();
 }
 
 function initMarkButtons(){
@@ -1973,30 +2151,69 @@ function getMix(){
     cache=d; cacheBuf=buf; return d;
 }
 
-function redraw(){
-    var cvs=$('canvas1'), s=getActiveSource();
-    if(!s || !s.buffer) return;
+/* ===== Offscreen-кэш БАЗОВОЙ волны =====
+   Базовая волна (фон + усреднённая волна) — самая дорогая часть.
+   Она не меняется ни при перетаскивании меток, ни во время воспроизведения,
+   ни при движении плейхеда. Меняется только при смене файла или размера.
+   Поэтому рисуем её один раз в offscreen-canvas, а метки/подсветку/плейхед
+   рисуем поверх на каждом кадре. Это даёт плавное перетаскивание меток
+   и плавный ход плейхеда без рывков. */
+var waveBaseCanvas = null;        // offscreen-canvas с базовой волной
+var waveBaseKey = '';             // ключ, по которому базовая волна валидна
+
+/* Возвращает ключ, описывающий всё, что влияет на БАЗОВУЮ волну.
+   Метки и плейхед сюда НЕ входят — они рисуются поверх. */
+function waveBaseSignature(s, w, h, dpr){
+    if(!s || !s.buffer) return '';
+    return [
+        s.id, s.buffer.length,
+        w, h, dpr,
+        cacheBuf === s.buffer ? 1 : 0
+    ].join('|');
+}
+
+/* ===== БАЗОВАЯ ВОЛНА (без меток и без подсветки выделения) =====
+   Это самая дорогая часть отрисовки — усреднение сэмплов.
+   Её пересобираем ТОЛЬКО при смене файла или размера канвы.
+   Метки, подсветка и плейхед рисуются поверх на каждом кадре —
+   это очень дёшево, поэтому перетаскивание меток идёт плавно. */
+function buildWaveBaseCanvas(s, w, h, dpr){
+    var off = document.createElement('canvas');
+    off.width  = Math.floor(w * dpr);
+    off.height = Math.floor(h * dpr);
+    var g = off.getContext('2d');
+    g.setTransform(dpr,0,0,dpr,0,0);
+
     var buf = s.buffer;
-    var w=cvs.clientWidth||700, h=cvs.clientHeight||140, dpr=window.devicePixelRatio||1;
-    if(cvs.width!==Math.floor(w*dpr)||cvs.height!==Math.floor(h*dpr)){cvs.width=Math.floor(w*dpr);cvs.height=Math.floor(h*dpr);}
-    var g=cvs.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
-    var mid=h/2;
+    var mid = h/2;
     g.fillStyle='#0b0b0b'; g.fillRect(0,0,w,h);
 
-    var sV = T.markIn || 0;
-    var eV = (T.markOut && T.markOut > 0) ? T.markOut : buf.duration;
-    var dur=buf.duration;
-    var x1=(sV/dur)*w, x2=(eV/dur)*w;
-    g.fillStyle='rgba(0,173,181,0.18)'; g.fillRect(x1,0,x2-x1,h);
-
-    var data=getMix(), n=data.length, step=Math.max(1,Math.ceil(n/w));
+    // Волна
+    var data = getMix(), n = data.length, step = Math.max(1, Math.ceil(n/w));
     g.strokeStyle='#00adb5'; g.lineWidth=1; g.beginPath();
     for(var i=0;i<w;i++){
-        var mn=1,mx=-1, s0=Math.floor(i*step), e0=Math.min(s0+step,n);
+        var mn=1, mx=-1, s0=Math.floor(i*step), e0=Math.min(s0+step,n);
         for(var j=s0;j<e0;j++){ var v=data[j]; if(v<mn)mn=v; if(v>mx)mx=v; }
         g.moveTo(i,(1+mn)*mid); g.lineTo(i,(1+mx)*mid);
     }
     g.stroke();
+
+    return off;
+}
+
+/* Рисует ПОДВИЖНЫЙ ОВЕРЛЕЙ поверх уже скопированной базовой волны:
+   подсветка выделенного диапазона, метки ВХОД/ВЫХОД, плейхед.
+   Всё это дёшево, потому что не трогает сэмплы. */
+function drawWaveOverlay(g, s, w, h){
+    var buf = s.buffer;
+    var dur = buf.duration;
+    var sV = T.markIn || 0;
+    var eV = (T.markOut && T.markOut > 0) ? T.markOut : dur;
+    var x1 = (sV/dur)*w, x2 = (eV/dur)*w;
+
+    // Подсветка выделенного диапазона
+    g.fillStyle='rgba(0,173,181,0.18)';
+    g.fillRect(x1, 0, x2 - x1, h);
 
     // Метка ВХОД
     g.strokeStyle='#28a745'; g.lineWidth=2; g.beginPath();
@@ -2010,18 +2227,78 @@ function redraw(){
     drawHandle(g, x2, MARK_RADIUS + 2, '#ffb300');
     drawHandle(g, x2, h - MARK_RADIUS - 2, '#ffb300');
 
-       // Плейхед
+    // Плейхед
     var cur = getCurrentPos();
-    var px = (cur / dur) * w;
-    g.strokeStyle='#ff5252'; g.lineWidth=2; g.beginPath(); g.moveTo(px,0); g.lineTo(px,h); g.stroke();
-    // Верхний треугольник
+    var px  = (cur / dur) * w;
+    g.strokeStyle='#ff5252'; g.lineWidth=2; g.beginPath();
+    g.moveTo(px,0); g.lineTo(px,h); g.stroke();
     g.fillStyle='#ff5252'; g.beginPath();
     g.moveTo(px-6, 0); g.lineTo(px+6, 0); g.lineTo(px, 10); g.closePath(); g.fill();
-    // Нижний шарик
     drawHandle(g, px, h - MARK_RADIUS - 2, '#ff5252');
-
-    
 }
+
+/* Полная перерисовка канвы: копирует базовую волну из offscreen
+   (если она устарела — пересобирает) и поверх рисует оверлей —
+   подсветку выделения, метки, плейхед.
+
+   Оверлей очень дешёвый — он не пересчитывает сэмплы, только рисует
+   несколько линий и кружков. Поэтому и перетаскивание меток, и
+   перетаскивание плейхеда, и воспроизведение работают плавно. */
+function redraw(){
+    var cvs = $('canvas1'), s = getActiveSource();
+    if(!s || !s.buffer) return;
+
+    var w = cvs.clientWidth  || 700;
+    var h = cvs.clientHeight || 140;
+    var dpr = window.devicePixelRatio || 1;
+    if(cvs.width !== Math.floor(w*dpr) || cvs.height !== Math.floor(h*dpr)){
+        cvs.width  = Math.floor(w*dpr);
+        cvs.height = Math.floor(h*dpr);
+    }
+    var g = cvs.getContext('2d');
+    g.setTransform(dpr,0,0,dpr,0,0);
+
+    // Пересобрать базовую волну, если что-то поменялось
+    var sig = waveBaseSignature(s, w, h, dpr);
+    if(sig !== waveBaseKey || !waveBaseCanvas){
+        waveBaseCanvas = buildWaveBaseCanvas(s, w, h, dpr);
+        waveBaseKey = sig;
+    }
+
+    // Копируем базовую волну
+    g.save();
+    g.setTransform(1,0,0,1,0,0);
+    g.drawImage(waveBaseCanvas, 0, 0);
+    g.restore();
+
+    // Поверх рисуем оверлей: подсветку, метки, плейхед
+    drawWaveOverlay(g, s, w, h);
+}
+
+/* Лёгкая перерисовка ТОЛЬКО плейхеда поверх текущего содержимого канвы.
+   Используется в цикле воспроизведения.
+
+   Реализация: копирует БАЗОВУЮ волну из offscreen каждый кадр (это быстро —
+   drawImage одного изображения) и поверх рисует оверлей (метки + плейхед).
+   Быстрее, чем полный redraw(), потому что не пересчитывает волну. */
+function redrawPlayheadOnly(){
+    var cvs = $('canvas1'), s = getActiveSource();
+    if(!s || !s.buffer) return;
+    if(!waveBaseCanvas){ redraw(); return; }
+
+    var w = cvs.clientWidth  || 700;
+    var h = cvs.clientHeight || 140;
+    var g = cvs.getContext('2d');
+
+    g.save();
+    g.setTransform(1,0,0,1,0,0);
+    g.drawImage(waveBaseCanvas, 0, 0);
+    g.restore();
+
+    drawWaveOverlay(g, s, w, h);
+}
+
+
 
 
 function drawHandle(g, x, y, color){
@@ -2092,10 +2369,11 @@ function hitTestWave(x, y){
         return (dx*dx + dy*dy) <= (hitR * hitR);
     }
 
-    // Плейхед: верхний треугольник (центр ~y=5) и нижний шарик (центр botY).
-    // Раньше обе зоны были смещены на MARK_RADIUS — шарик «ловился» ниже себя.
-    if(near(x, y, xPl, 5)) return 'play';
-    if(near(x, y, xPl, geom.botY)) return 'play';
+        // Плейхед: ловим по всей вертикали в пределах узкой полосы вокруг его X.
+    // Это позволяет схватить плейхед в любой точке волны, а не только
+    // в двух «шариках». Полоса шириной PLAY_HIT_W.
+    var PLAY_HIT_W = 7;
+    if(Math.abs(x - xPl) <= PLAY_HIT_W) return 'play';
 
     // Метка ВХОД — голубые шарики сверху и снизу
     if(near(x, y, xIn, geom.topY)) return 'in';
@@ -2147,8 +2425,10 @@ function ensureCtx(cb){
 function play(start,end){
     var s = getActiveSource();
     if(!s || !s.buffer) return;
-    // Останавливаем Мастер, чтобы не играли одновременно
-    tlStop(false);
+    // Одновременно два плеера не играют: если играет МАСТЕР — ставим его
+    // на ПАУЗУ (с сохранением позиции), а не в ноль. Пользователь потом
+    // нажмёт Play в МАСТЕРЕ — продолжит с того же места.
+    if(tl.playing) tlPause();
     if(T.source){ try{ T.source.onended=null; T.source.stop(); }catch(e){} try{ T.source.disconnect(); }catch(e){} }
     stopLoop();
     T.token = (T.token||0)+1;
@@ -2226,7 +2506,10 @@ function stop(reset){
 function loop(){
     var tick=function(){
         if(!T.playing) return;
-        redraw(); updateTimecode();
+        // В цикле воспроизведения перерисовываем ТОЛЬКО плейхед —
+        // волна и метки не меняются, их пересчёт каждый кадр давал рывки.
+        redrawPlayheadOnly();
+        updateTimecode();
         T.raf=requestAnimationFrame(tick);
     };
     T.raf=requestAnimationFrame(tick);
@@ -2234,6 +2517,15 @@ function loop(){
 function stopLoop(){
     if(T.raf){ cancelAnimationFrame(T.raf); T.raf=null; }
     redraw(); updateTimecode();
+}
+
+/* Сбросить кэш БАЗОВОЙ волны. Нужно звать только когда меняется
+   сам звуковой файл или ширина/высота канвы.
+   Метки и плейхед сюда НЕ входят — они рисуются поверх оверлеем,
+   поэтому при их перетаскивании эта функция НЕ вызывается. */
+function invalidateWaveCache(){
+    waveBaseCanvas = null;
+    waveBaseKey = '';
 }
 
 function jumpPlayerTo(pos){
@@ -2286,8 +2578,8 @@ function initWaveInteraction(){
     var cvs = $('canvas1');
     if(!cvs) return;
 
-    var HOLD_MS = 100;          // порог долгого удержания
-    var SLOP_PX = 18;            // мёртвая зона до отмены удержания
+       var DRAG_START_PX = 8;      // минимальное смещение мыши, чтобы это считалось
+                                // началом drag'а (иначе — просто клик)
 
     var clickStartX = 0, clickStartY = 0;
     var clickCandidate = false; // «возможный клик» — поставим плейхед на mouseup
@@ -2321,38 +2613,38 @@ function initWaveInteraction(){
             return;
         }
 
-        // Не попали в шарик — запускаем таймер долгого удержания
+        // Не попали в шарик — возможен либо клик по волне (переставить
+        // плейхед), либо drag в МАСТЕР. Что именно — решится на mousemove:
+        // если мышь сдвинется ≥ DRAG_START_PX — это drag, иначе клик.
+        //
+        // НИКАКИХ таймеров: пользователь может держать мышь сколько угодно
+        // (2 секунды, 10 секунд) и потом начать тащить — drag стартует
+        // в тот момент, когда он реально сдвинет мышь.
         clickStartX = e.clientX;
         clickStartY = e.clientY;
         clickCandidate = true;
         dropHappened = false;
 
-        waveHoldStartX = e.clientX;
-        waveHoldStartY = e.clientY;
         waveDragActive = false;
         waveDragRange = null;
 
-                if(waveHoldTimer){ clearTimeout(waveHoldTimer); }
-        waveHoldTimer = setTimeout(function(){
-            waveHoldTimer = null;
-            // Условие: мышь всё ещё нажата + есть валидное выделение
-            if(!clickCandidate) return;
-            var s2 = getActiveSource();
-            if(!s2 || !s2.buffer) return;
-            var sV = T.markIn || 0;
-            var eV = (T.markOut && T.markOut > 0) ? T.markOut : s2.buffer.duration;
-            if(eV - sV < 0.02) return;
-
-            // Начинаем drag — ghost появляется там, где СЕЙЧАС курсор
-            clickCandidate = false;
-            waveDragActive = true;
-            waveDragRange = { markIn: sV, markOut: eV, sourceId: s2.id };
-
-            cvs.style.cursor = 'grabbing';
-            showDragGhost(lastMouseX, lastMouseY);
-            highlightMasterDrop();
-            setStatus('Тяните выделение в Мастер…');
-        }, HOLD_MS);
+        // Быстрый путь: Shift + тянуть — drag в Мастер стартует сразу.
+        if(e.shiftKey){
+            var s0 = getActiveSource();
+            var sV0 = T.markIn || 0;
+            var eV0 = (T.markOut && T.markOut > 0) ? T.markOut : (s0 ? s0.buffer.duration : 0);
+            if(s0 && s0.buffer && (eV0 - sV0) >= 0.02){
+                clickCandidate = false;
+                waveDragActive = true;
+                waveDragRange = { markIn: sV0, markOut: eV0, sourceId: s0.id };
+                cvs.style.cursor = 'grabbing';
+                showDragGhost(lastMouseX, lastMouseY);
+                highlightMasterDrop();
+                setStatus('Тяните выделение в Мастер… (Shift)');
+                e.preventDefault();
+                return;
+            }
+        }
 
         e.preventDefault();
     });
@@ -2377,13 +2669,16 @@ function initWaveInteraction(){
             if(newVal < 0) newVal = 0;
             if(newVal > dur) newVal = dur;
 
-            if(T.dragMode === 'in'){
+                                    if(T.dragMode === 'in'){
                 T.markIn = newVal;
                 if(T.markIn >= T.markOut){
                     T.markOut = dur;
                     $('lblEnd1').textContent = fmtTime(T.markOut);
                 }
                 $('lblStart1').textContent = fmtTime(newVal);
+                // НЕ вызываем invalidateWaveCache(): метка — часть оверлея,
+                // она рисуется поверх базовой волны. Пересборка волны тут
+                // не нужна и только тормозит перетаскивание.
             } else if(T.dragMode === 'out'){
                 T.markOut = newVal;
                 if(T.markOut <= T.markIn){
@@ -2391,6 +2686,7 @@ function initWaveInteraction(){
                     $('lblStart1').textContent = fmtTime(0);
                 }
                 $('lblEnd1').textContent = fmtTime(newVal);
+                // См. комментарий выше — не инвалидируем базовую волну.
             } else {
                 T.pausedAt = newVal;
                 T.paused = true;
@@ -2409,14 +2705,34 @@ function initWaveInteraction(){
         // 2) Идёт drag выделения — ghost двигается через document-listener
         if(waveDragActive){ return; }
 
-        // 3) Возможный клик — проверяем, не сдвинулась ли мышь
+            // 3) Возможный клик ИЛИ drag в МАСТЕР.
+        //    Как только мышь сдвинулась на DRAG_START_PX — стартуем drag.
+        //    Это работает в ЛЮБОЙ момент удержания: и сразу после нажатия,
+        //    и через 5 секунд после нажатия. Таймеров больше нет.
         if(clickCandidate){
             var dxp = e.clientX - clickStartX;
             var dyp = e.clientY - clickStartY;
-            if(dxp*dxp + dyp*dyp > SLOP_PX*SLOP_PX){
-                // Мышь уехала — отменяем удержание и клик
+            var dist2 = dxp*dxp + dyp*dyp;
+            if(dist2 > DRAG_START_PX*DRAG_START_PX){
+                // Мышь реально поехала — стартуем drag в МАСТЕР.
+                var s2 = getActiveSource();
+                if(s2 && s2.buffer){
+                    var sV = T.markIn || 0;
+                    var eV = (T.markOut && T.markOut > 0) ? T.markOut : s2.buffer.duration;
+                    if(eV - sV >= 0.02){
+                        clickCandidate = false;
+                        waveDragActive = true;
+                        waveDragRange = { markIn: sV, markOut: eV, sourceId: s2.id };
+                        cvs.style.cursor = 'grabbing';
+                        showDragGhost(lastMouseX, lastMouseY);
+                        highlightMasterDrop();
+                        setStatus('Тяните выделение в Мастер…');
+                        return;
+                    }
+                }
+                // Диапазон слишком короткий — просто отменяем клик, ничего не делаем.
                 clickCandidate = false;
-                if(waveHoldTimer){ clearTimeout(waveHoldTimer); waveHoldTimer = null; }
+                return;
             }
         }
 
@@ -2461,10 +2777,15 @@ function initWaveInteraction(){
             return;
         }
 
-        // Обычный клик — ставим плейхед (с задержкой, чтобы отличить от двойного)
+           // Обычный клик левой кнопкой — ставим плейхед МГНОВЕННО.
+        //
+        // ПКМ используется для открытия файла (см. contextmenu), поэтому
+        // никакого dblclick'а на канве нет. Сюда доходим только если
+        // drag НЕ стартовал (мышь не сдвинулась на DRAG_START_PX).
+        // Значит это чистый клик — переставляем плейхед.
         if(clickCandidate){
             clickCandidate = false;
-            if(waveHoldTimer){ clearTimeout(waveHoldTimer); waveHoldTimer = null; }
+
             var s = getActiveSource();
             if(!s || !s.buffer) return;
             var r = cvs.getBoundingClientRect();
@@ -2476,24 +2797,17 @@ function initWaveInteraction(){
             if(t < 0) t = 0;
             if(t > s.buffer.duration) t = s.buffer.duration;
 
-            // Откладываем перестановку плейхеда на 250 мс.
-            // Если за это время прилетит dblclick — отменим таймер.
-            if(singleClickTimer){ clearTimeout(singleClickTimer); }
-            singleClickTimer = setTimeout(function(){
-                singleClickTimer = null;
-                var sc = getActiveSource();
-                if(!sc || !sc.buffer) return;
-                if(T.playing){
-                    T.playing = false;
-                    T.pausedAt = t;
-                    play(t, sc.buffer.duration);
-                } else {
-                    T.pausedAt = t;
-                    T.paused = true;
-                }
-                redraw();
-                updateTimecode();
-            }, 220);
+            if(T.playing){
+                // Играем — перезапускаем звук с новой точки.
+                T.playing = false;
+                T.pausedAt = t;
+                play(t, s.buffer.duration);
+            } else {
+                T.pausedAt = t;
+                T.paused = true;
+            }
+            redraw();
+            updateTimecode();
         }
     });
 
@@ -2514,10 +2828,7 @@ function initWaveInteraction(){
    ПЕРЕТАСКИВАНИЕ ВЫДЕЛЕНИЯ В МАСТЕР (долгое удержание на волне)
    ============================================================ */
 var waveDragRange = null;       // {markIn, markOut, sourceId} — на время drag'а
-var singleClickTimer = null;  // таймер отложенного одинарного клика
 var waveDragActive = false;     // включён ли режим drag'а
-var waveHoldTimer = null;       // таймер долгого удержания
-var waveHoldStartX = 0, waveHoldStartY = 0;
 var lastMouseX = 0, lastMouseY = 0;  // текущая позиция курсора
 
 function highlightMasterDrop(){
@@ -3759,6 +4070,9 @@ function isEditable(el){
     // а не переключал галочку.
     if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT') return true;
     if(el.isContentEditable) return true;
+    // Сворачиваемый заголовок формы обратной связи (role="button") тоже
+    // забирает Space/Enter себе — не даём глобальным хоткеям сработать.
+    if(el.classList && el.classList.contains('feedback-toggle')) return true;
     return false;
 }
 
@@ -4094,12 +4408,14 @@ function updateLiveFragGains(fragId, newFv){
 function tlPlay(fromPos){
     if(fragments.length === 0) return;
 
-    // Гасим прежний цикл отрисовки, иначе при перемотке во время
+        // Гасим прежний цикл отрисовки, иначе при перемотке во время
     // воспроизведения старые requestAnimationFrame продолжают крутиться.
     tlCancelLoop();
 
-    // Останавливаем ИСХОДНИК, чтобы не играли одновременно
-    stop(false);
+    // Одновременно два плеера не играют: если играет ИСХОДНИК — ставим его
+    // на ПАУЗУ (с сохранением позиции), а не в ноль. Пользователь потом
+    // вернётся в ИСХОДНИК и нажмёт Play — продолжит с того же места.
+    if(T.playing) pause();
 
     var missing = 0;
     for(var mm=0; mm<fragments.length; mm++){ if(!getBufferForFrag(fragments[mm])) missing++; }
@@ -4975,6 +5291,125 @@ function initHelpModal(){
 }
 
 /* ============================================================
+   ОБРАТНАЯ СВЯЗЬ (Google Apps Script → Google Sheets)
+   ============================================================ */
+
+/* URL веб-приложения Apps Script (получен при развёртывании). */
+var FEEDBACK_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwW7CmGVqqrAJPTW3R47D-mZObwQIbJcw_kGjmaa-iDUn3Fluey2kKe-jzgxm2L5vl8/exec';
+
+function setFeedbackStatus(text, kind){
+    // kind: '' | 'fb-sending' | 'fb-ok' | 'fb-err'
+    var el = $('feedbackStatus');
+    if(!el) return;
+    el.textContent = text;
+    el.title = text;
+    el.className = 'status-inline' + (kind ? ' ' + kind : '');
+}
+
+function initFeedbackForm(){
+    var form = $('feedbackForm');
+    if(!form) return;
+
+    setFeedbackStatus('Есть идея или нашёл баг? Напиши!');
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        sendFeedback();
+    });
+
+    // ===== Сворачивание / разворачивание блока ОБРАТНОЙ СВЯЗИ =====
+    var toggle = $('feedbackToggle');
+    var block  = $('blockFeedback');
+    if(toggle && block){
+        toggle.addEventListener('click', function(){
+            block.classList.toggle('open');
+            var isOpen = block.classList.contains('open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if(isOpen){
+                setTimeout(function(){
+                    var nameInput = $('fbName');
+                    if(nameInput && !nameInput.value) nameInput.focus();
+                }, 350);
+            }
+        });
+
+        // Поддержка клавиатуры (Enter / Space)
+        toggle.addEventListener('keydown', function(e){
+            if(e.key === 'Enter' || e.key === ' '){
+                e.preventDefault();
+                toggle.click();
+            }
+        });
+    }
+}
+
+function sendFeedback(){
+    var nameEl = $('fbName');
+    var msgEl  = $('fbMessage');
+    var btn    = $('fbSubmit');
+    if(!nameEl || !msgEl || !btn) return;
+
+    var name    = (nameEl.value || '').trim();
+    var message = (msgEl.value  || '').trim();
+
+    if(name.length < 1){
+        setFeedbackStatus('Введите имя', 'fb-err');
+        nameEl.focus();
+        return;
+    }
+    if(message.length < 3){
+        setFeedbackStatus('Сообщение слишком короткое', 'fb-err');
+        msgEl.focus();
+        return;
+    }
+
+    btn.disabled = true;
+    nameEl.disabled = true;
+    msgEl.disabled  = true;
+    var btnOrigText = btn.textContent;
+    btn.textContent = '⏳ Отправляю…';
+    setFeedbackStatus('Отправляю…', 'fb-sending');
+
+    // Content-Type application/x-www-form-urlencoded — самый дружелюбный
+    // к Apps Script: не вызывает CORS-preflight, e.parameter читается штатно.
+    var body = 'name='    + encodeURIComponent(name) +
+               '&message=' + encodeURIComponent(message);
+
+    fetch(FEEDBACK_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: body
+    })
+    .then(function(resp){
+        if(!resp.ok) throw new Error('HTTP ' + resp.status);
+        return resp.text().then(function(txt){
+            try{ return JSON.parse(txt); }
+            catch(e){ return { result: 'unknown', raw: txt }; }
+        });
+    })
+    .then(function(data){
+        if(data && data.result === 'success'){
+            setFeedbackStatus('✅ Спасибо! Сообщение отправлено.', 'fb-ok');
+            nameEl.value = '';
+            msgEl.value  = '';
+        } else {
+            throw new Error('Неожиданный ответ: ' + JSON.stringify(data));
+        }
+    })
+    .catch(function(err){
+        console.error('[Feedback]', err);
+        setFeedbackStatus('❌ Не удалось отправить. Попробуйте позже.', 'fb-err');
+    })
+    .then(function(){
+        // finally-стадия: разблокируем форму в любом случае
+        btn.disabled = false;
+        nameEl.disabled = false;
+        msgEl.disabled  = false;
+        btn.textContent = btnOrigText;
+    });
+}
+
+/* ============================================================
    СТАРТ
    ============================================================ */
 function init(){
@@ -5006,10 +5441,11 @@ function init(){
     // Пересборка таймлайна пересоздаёт canvas'ы и перерисовывает волны,
     // поэтому на resize/ResizeObserver делаем это с задержкой (debounce).
     var resizeTimer = null;
-    function onViewportResize(){
+        function onViewportResize(){
         if(resizeTimer) clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function(){
             resizeTimer = null;
+            invalidateWaveCache();
             var s = getActiveSource();
             if(s && s.buffer) redraw();
             if(fragments.length) renderTimeline();
@@ -5022,7 +5458,8 @@ function init(){
         if(cont) ro.observe(cont);
     }
 
-    initHelpModal();
+       initHelpModal();
+    initFeedbackForm();
 }
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
