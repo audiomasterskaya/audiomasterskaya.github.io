@@ -3650,6 +3650,76 @@ function sendFeedback(){
     });
 }
 
+/* ============================================================
+   МОБИЛЬНАЯ ВЕРСИЯ — каркас
+   ============================================================ */
+
+/* Ключ в localStorage для принудительного десктопа на телефоне */
+var LS_FORCE_DESKTOP = 'amastr_forceDesktop';
+
+/* Проверить, включён ли принудительный десктоп */
+function isForceDesktop(){
+    try{
+        return localStorage.getItem(LS_FORCE_DESKTOP) === '1';
+    }catch(e){ return false; }
+}
+
+/* Включить/выключить принудительный десктоп */
+function setForceDesktop(on){
+    try{
+        if(on) localStorage.setItem(LS_FORCE_DESKTOP, '1');
+        else   localStorage.removeItem(LS_FORCE_DESKTOP);
+    }catch(e){}
+    applyForceDesktopClass();
+}
+
+/* Применить класс на <body> */
+function applyForceDesktopClass(){
+    if(isForceDesktop()) document.body.classList.add('force-desktop');
+    else                 document.body.classList.remove('force-desktop');
+}
+
+/* Сброс forceDesktop на настоящем десктопе (>900px) */
+function resetForceDesktopOnDesktop(){
+    if(window.innerWidth > 900 && isForceDesktop()){
+        setForceDesktop(false);
+    }
+}
+
+/* ===== Мобильный ИСХОДНИК: тап по заглушке ===== */
+function initMobileFileZone(){
+    var dz = $('activeEmptyMobile');
+    var inp = $('file1');
+    if(!dz || !inp) return;
+
+    // На мобильном заглушка — большая кнопка «Тап для загрузки»
+    dz.addEventListener('click', function(){
+        inp.click();
+    });
+
+    // Подсветка при перетаскивании (на планшетах с мышью тоже работает)
+    dz.addEventListener('dragover', function(e){
+        e.preventDefault();
+        dz.classList.add('dragover');
+    });
+    dz.addEventListener('dragleave', function(){
+        dz.classList.remove('dragover');
+    });
+    dz.addEventListener('drop', function(e){
+        e.preventDefault();
+        dz.classList.remove('dragover');
+        if(e.dataTransfer.files && e.dataTransfer.files.length){
+            addSourceFromFile(e.dataTransfer.files[0]);
+        }
+    });
+}
+
+/* ===== Старт мобильной части (только на узком экране) ===== */
+function initMobile(){
+    if(window.innerWidth > 900) return;
+    initMobileFileZone();
+}
+
 /* ===== Старт ===== */
 function init(){
     initPlayer();
@@ -3695,8 +3765,13 @@ function init(){
         if(cont) ro.observe(cont);
     }
 
-    initHelpModal();
+       initHelpModal();
     initFeedbackForm();
+
+    // ===== Мобильная версия =====
+    resetForceDesktopOnDesktop();
+    applyForceDesktopClass();
+    initMobile();
 }
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
