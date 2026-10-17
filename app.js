@@ -208,11 +208,9 @@ function setPlayerButtonsEnabled(enabled){
 
 function renderActivePanel(){
     var s = getActiveSource();
-    var empty = $('activeEmpty');
     var area = $('area1');
 
     if(!s || !s.buffer){
-        empty.style.display = 'flex';
         area.style.display = 'none';
         setPlayerButtonsEnabled(false);
         var bStop = $('btnStop1'); if(bStop) bStop.disabled = true;
@@ -224,8 +222,7 @@ function renderActivePanel(){
         return;
     }
 
-    empty.style.display = 'none';
-    area.style.display = 'block';
+        area.style.display = 'block';
 
     var dur = s.buffer.duration;
     $('total1').textContent = fmtTime(dur);
