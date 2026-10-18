@@ -397,23 +397,6 @@ body{
     font-weight: 600;
 }
 
-/* ===== Мобильная заглушка ИСХОДНИКА ===== */
-@media (max-width: 900px){
-    #activeEmptyMobile{
-        min-height: 200px;
-        padding: 32px 20px;
-        gap: 16px;
-    }
-    #activeEmptyMobile .dropzone-title{
-        font-size: 20px !important;
-        font-weight: 700 !important;
-    }
-    #activeEmptyMobile .dropzone-hint{
-        font-size: 13px !important;
-        color: var(--muted) !important;
-    }
-}
-
 /* ===== Оверлей загрузки ===== */
 .load-overlay{
     position:absolute;
@@ -1326,22 +1309,3 @@ button:disabled{
 #blockFeedback .status-inline{
     max-width:min(60vw, 520px);
 }
-
-/* ============================================================
-   МОБИЛЬНАЯ ВЕРСИЯ — разделение видимости
-   ============================================================
-   .mobile-only  — видно только на мобильном (≤900px)
-   .desktop-only — видно только на десктопе (>900px)
-   body.force-desktop — принудительно десктопный вид на телефоне
-   ============================================================ */
-
-.mobile-only { display: none !important; }
-
-@media (max-width: 900px){
-    .mobile-only  { display: block !important; }
-    .desktop-only { display: none  !important; }
-}
-
-/* Принудительный десктоп на телефоне (кнопка «Полная версия») */
-body.force-desktop .mobile-only  { display: none  !important; }
-body.force-desktop .desktop-only { display: block !important; }
