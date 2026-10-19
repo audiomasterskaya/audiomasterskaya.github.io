@@ -1158,6 +1158,8 @@ function addFragment(){
     var eV = (T.markOut && T.markOut > 0) ? T.markOut : s.buffer.duration;
     if(eV - sV < 0.01){ setStatus('Неверный диапазон фрагмента', true); return; }
 
+    var editPos = pauseTlForEdit();
+
     var frag = {
         id: ++fragIdSeq,
         sourceId: s.id,
@@ -1168,12 +1170,14 @@ function addFragment(){
         xfadeIn: XFADE.defaultMs / 1000,
         xfadeOut: XFADE.defaultMs / 1000
     };
-    pushHistory();
+        pushHistory();
     fragments.push(frag);
     setSelectedFragIds([frag.id]);
     selectionAnchor = frag.id;
     renderTimeline();
     setStatus('Фрагмент «' + frag.srcName + '» добавлен. Всего: ' + fragments.length);
+
+    if(editPos !== null) resumeTlAfterEdit(editPos);
 }
 
 function fragDuration(f){ return f.trimEnd - f.trimStart; }
@@ -1784,9 +1788,7 @@ function deleteSelectedFragments(){
     var toRemove = getSelectedFragIndexes();
     if(toRemove.length === 0){ clearSelection(); $('tlDelete').disabled = true; return; }
 
-    if(tl.playing){
-        tlStop(true);
-    }
+        var editPos = pauseTlForEdit();
 
     pushHistory();
     for(var i=toRemove.length-1;i>=0;i--){
@@ -1805,8 +1807,10 @@ function deleteSelectedFragments(){
 
     normalizeXfadesAtSeams();
 
-    renderTimeline();
+        renderTimeline();
     setStatus('Удалено фрагментов: ' + toRemove.length + '. Всего: ' + fragments.length);
+
+    if(editPos !== null) resumeTlAfterEdit(editPos);
 }
 
 function findFragIndexUnderPlayhead(){
@@ -2015,9 +2019,7 @@ function cutSelectedFragmentsToClipboard(){
         fragClipboard.push(snapFragForClipboard(fragments[idxs[i]]));
     }
 
-    if(tl.playing){
-        tlStop(true);
-    }
+       var editPos = pauseTlForEdit();
 
     pushHistory();
     for(var j=idxs.length-1;j>=0;j--){
@@ -2035,8 +2037,10 @@ function cutSelectedFragmentsToClipboard(){
 
     normalizeXfadesAtSeams();
 
-    renderTimeline();
+      renderTimeline();
     setStatus('Вырезано фрагментов: ' + fragClipboard.length);
+
+    if(editPos !== null) resumeTlAfterEdit(editPos);
 }
 
 function pasteFragmentsFromClipboard(){
@@ -2057,9 +2061,7 @@ function pasteFragmentsFromClipboard(){
         pasteAt = (lastIdx === -1) ? fragments.length : lastIdx + 1;
     }
 
-    if(tl.playing){
-        tlStop(true);
-    }
+        var editPos = pauseTlForEdit();
 
     pushHistory();
     var newIds = [];
@@ -2079,21 +2081,21 @@ function pasteFragmentsFromClipboard(){
         newIds.push(newFrag.id);
     }
 
-    normalizeXfadesAtSeams();
+        normalizeXfadesAtSeams();
 
     setSelectedFragIds(newIds);
     selectionAnchor = newIds[0];
     renderTimeline();
     setStatus('Вставлено фрагментов: ' + newIds.length);
+
+    if(editPos !== null) resumeTlAfterEdit(editPos);
 }
 
 function duplicateSelectedFragments(){
     if(selectedFragIds.length === 0){ setStatus('Выделите фрагменты для дублирования', true); return; }
-    var idxs = getSortedSelectedIndexes();
+        var idxs = getSortedSelectedIndexes();
 
-    if(tl.playing){
-        tlStop(true);
-    }
+    var editPos = pauseTlForEdit();
 
     pushHistory();
     var newIds = [];
@@ -2116,10 +2118,12 @@ function duplicateSelectedFragments(){
 
     normalizeXfadesAtSeams();
 
-    setSelectedFragIds(newIds);
+        setSelectedFragIds(newIds);
     selectionAnchor = newIds[0];
     renderTimeline();
     setStatus('Дублировано фрагментов: ' + newIds.length);
+
+    if(editPos !== null) resumeTlAfterEdit(editPos);
 }
 
 /* ===== Undo / Redo ===== */
